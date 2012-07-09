@@ -752,5 +752,20 @@ namespace Sass {
       }
     }
 
+    // Misc Functions ///////////////////////////////////////////////////
+    Function_Descriptor if_descriptor =
+    { "if", "$value", "$string_1", "$string_2", 0 };
+    Node if_impl(const vector<Token>& parameters, map<Token, Node>& bindings, Node_Factory& new_Node) {
+      Node val(bindings[parameters[0]]);
+      Node n1(bindings[parameters[1]]);
+      Node n2(bindings[parameters[2]]);
+      if (val.type() == Node::boolean && val.boolean_value() == false) {
+        return n2;
+      }
+      else
+      {
+        return n1;
+      }
+    }
   }
 }

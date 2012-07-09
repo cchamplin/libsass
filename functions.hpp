@@ -183,6 +183,12 @@ namespace Sass {
     extern Function_Descriptor not_descriptor;
     Node not_impl(const vector<Token>& parameters, map<Token, Node>& bindings, Node_Factory& new_Node);
 
+    // Misc Functions ///////////////////////////////////////////////////
+
+    extern Function_Descriptor if_descriptor;
+    Node if_impl(const vector<Token>& parameters, map<Token, Node>& bindings, Node_Factory& new_Node);
+
+
   }
   
 }
