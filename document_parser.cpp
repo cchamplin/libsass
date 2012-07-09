@@ -432,8 +432,8 @@ namespace Sass {
       else if (lex< sequence< optional<sign>, digits > >()) {
         pseudo << context.new_Node(Node::value, path, line, lexed);
       }
-      else if (lex< string_constant >()) {
-        pseudo << context.new_Node(Node::string_constant, path, line, lexed);
+      else if (lex< identifier >()) {
+        pseudo << context.new_Node(Node::identifier, path, line, lexed);
       }
       else {
         throw_syntax_error("invalid argument to " + name.to_string() + "...)");
@@ -808,17 +808,21 @@ namespace Sass {
   
   Node Document::parse_value()
   {
-    if (lex< uri_prefix >())
+    if (peek< uri_prefix >())
     {
-      const char* value = position;
-      const char* rparen = find_first< exactly<')'> >(position);
-      if (!rparen) throw_syntax_error("URI is missing ')'");
-      Token contents(Token::make(value, rparen));
-      // lex< string_constant >();
-      Node result(context.new_Node(Node::uri, path, line, contents));
-      position = rparen;
-      lex< exactly<')'> >();
-      return result;
+      if (!peek< sequence < uri_prefix, variable > >())
+      {
+	lex< uri_prefix >();
+      	const char* value = position;
+      	const char* rparen = find_first< exactly<')'> >(position);
+      	if (!rparen) throw_syntax_error("URI is missing ')'");
+      	Token contents(Token::make(value, rparen));
+      	// lex< string_constant >();
+      	Node result(context.new_Node(Node::uri, path, line, contents));
+      	position = rparen;
+      	lex< exactly<')'> >();
+      	return result;
+      }
     }
 
     if (peek< functional >())
